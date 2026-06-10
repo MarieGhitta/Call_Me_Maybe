@@ -5,8 +5,12 @@ def main():
     try:
         prompt = load_json("data/input/function_calling_tests.json")
         print(prompt)
-    except Exception:
-        print("ERROR")
+        print()
+        prompt = load_json("data/input/functions_definition.json")
+        print(prompt)
+        print()
+    except Exception as e:
+        print(e)
 
 
 if __name__ == "__main__":
