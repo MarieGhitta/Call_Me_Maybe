@@ -1,16 +1,17 @@
-PYTHON = python3.14
+install:
+	uv sync
 
 all: run
 
 run:
-	$(PYTHON) -m src
+	uv run python -m src
 
 debug:
-	$(PYTHON) -m src
+	uv run python -m src
 
 clean:
 	rm -rf .mypy_cache .DS_Store
 	find . -type d -name "__pycache__" -exec rm -rf {} +
 	find . -type d -name ".mypy_cache" -exec rm -rf {} +
 
-.PHONY: all run debug clean
+.PHONY: install all run debug clean
