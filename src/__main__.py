@@ -2,6 +2,7 @@ from .models_loader import load_prompts, load_functions
 # import numpy as np
 from llm_sdk.llm_sdk import Small_LLM_Model
 
+
 def function_tokenisation(loaded_functions: list, model: Small_LLM_Model) -> dict:
     tokenized_fn = {}
     for fn in loaded_functions:
@@ -9,16 +10,23 @@ def function_tokenisation(loaded_functions: list, model: Small_LLM_Model) -> dic
     return tokenized_fn
 
 
-def compatible_functions(tokens_generated: list, fonctions_tokenised: dict) -> list:
+def parameters_tokenisation(found_fn, model: Small_LLM_Model) -> dict:
+    tokenized_args = {}
+    for p in found_fn.parameters:
+        tokenized_args[p] = model.encode(p).tolist()[0]
+    return tokenized_args
+
+
+def compatible_tokens(tokens_generated: list, functions_tokenised: dict) -> list:
     comp_fn = []
-    for name, value in fonctions_tokenised.items():
+    for name, value in functions_tokenised.items():
         if tokens_generated == value[:len(tokens_generated)]:
             comp_fn.append(name)
     return comp_fn
 
 
-def allowed_next_tokens(tokens_generated: list, functions_tokenised: dict) -> set:
-    comp_fn = compatible_functions(tokens_generated, functions_tokenised)
+def allowed_next_fn_tokens(tokens_generated: list, functions_tokenised: dict) -> set:
+    comp_fn = compatible_tokens(tokens_generated, functions_tokenised)
     allowed_tok = set()
     for cf in comp_fn:
         allowed_tok.add(functions_tokenised[cf][len(tokens_generated)])
@@ -38,17 +46,60 @@ def select_fn(model: Small_LLM_Model,
     prompt += f"\nUser Request: {user_prompt}\n"
     prompt += "\nSelected function:"
     tokenised_prompt = model.encode(prompt).tolist()[0]
-    comp_fn = compatible_functions(generate_tokens, tokenized_functions)
+    comp_fn = compatible_tokens(generate_tokens, tokenized_functions)
     while True:
         entry_model = tokenised_prompt + generate_tokens
         logits_fn = model.get_logits_from_input_ids(entry_model)
-        allowed = allowed_next_tokens(generate_tokens, tokenized_functions)
+        allowed = allowed_next_fn_tokens(generate_tokens, tokenized_functions)
         best_tok = best_token_authorized(allowed, logits_fn)
         generate_tokens.append(best_tok)
-        comp_fn = compatible_functions(generate_tokens, tokenized_functions)
+        comp_fn = compatible_tokens(generate_tokens, tokenized_functions)
         if len(generate_tokens) == len(tokenized_functions[comp_fn[0]]) and len(comp_fn) == 1:
             break
     return comp_fn[0]
+
+
+def selected_fn(found_fn: str, loaded_functions: list):
+    for fn in loaded_functions:
+        if fn.name == found_fn:
+            return fn
+
+
+def allowed_next_args_tokens(model: Small_LLM_Model,
+                             tokens_generated: list,
+                             allowed_parameters, fn) -> set:
+    allowed = set()
+    if not tokens_generated:
+        next_tok = model.encode("{").tolist()[0][0]
+        allowed.add(next_tok)
+    elif len(tokens_generated) == 1:
+        next_tok = model.encode('"').tolist()[0][0]
+        allowed.add(next_tok)
+    else:
+        param_tokens = tokens_generated[2:]
+        param_tokenized = (parameters_tokenisation(fn, model))
+        comp_args = compatible_tokens(param_tokens, param_tokenized)
+        for ca in comp_args:
+            allowed.add(param_tokenized[ca][len(param_tokens)])
+    return allowed
+
+
+def select_args(model: Small_LLM_Model,
+                user_prompt: str,
+                loaded_functions: list,
+                found_fn: str):
+    generate_tokens = []
+    entry_model = []
+    prompt = "Extract the arguments for the selected function.\n"
+    fn = selected_fn(found_fn, loaded_functions)
+    for p in fn.parameters:
+        prompt += f"- {p}: {fn.parameters[p]['type']}\n"
+    prompt += f"\nUser Request: {user_prompt}\n"
+    prompt += "\nArguments:"
+    tokenised_prompt = model.encode(prompt).tolist()[0]
+    while True:
+        entry_model = tokenised_prompt + generate_tokens
+        logits_args = model.get_logits_from_input_ids(entry_model)
 
 
 def best_token_authorized(allowed_tokens: set, logits: list):
@@ -67,9 +118,8 @@ def main():
         loaded_functions = load_functions("data/input/functions_definition.json")
         model = Small_LLM_Model()
         tokenised_functions = function_tokenisation(loaded_functions, model)
-        compatible_fn = compatible_functions([8822, 2891], tokenised_functions)
-        print(select_fn(model, "Substitute the word 'cat' with 'dog' in 'The cat sat on the mat with another cat'", loaded_functions, tokenised_functions))
-
+        # print(select_fn(model, "Substitute the word 'cat' with 'dog' in 'The cat sat on the mat with another cat'", loaded_functions, tokenised_functions))
+        print(model.encode("{").tolist())
     except Exception as e:
         print(e)
 
