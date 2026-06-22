@@ -65,22 +65,45 @@ def selected_fn(found_fn: str, loaded_functions: list):
             return fn
 
 
-def allowed_next_args_tokens(model: Small_LLM_Model,
+def allowed_next_keys_tokens(model: Small_LLM_Model,
                              tokens_generated: list,
-                             allowed_parameters, fn) -> set:
-    allowed = set()
+                             fn, allowed: set):
+    open_brace = model.encode('{').tolist()[0][0]
+    quote_tok = model.encode('"').tolist()[0][0]
+    colon_tok = model.encode(':').tolist()[0][0]
     if not tokens_generated:
-        next_tok = model.encode("{").tolist()[0][0]
-        allowed.add(next_tok)
-    elif len(tokens_generated) == 1:
-        next_tok = model.encode('"').tolist()[0][0]
-        allowed.add(next_tok)
+        allowed.add(open_brace)
+        return
+    elif tokens_generated == [open_brace]:
+        allowed.add(quote_tok)
+        return
+    nb_quotes = tokens_generated.count(quote_tok)
+    if nb_quotes == 2:
+        allowed.add(colon_tok)
+        return
     else:
         param_tokens = tokens_generated[2:]
         param_tokenized = (parameters_tokenisation(fn, model))
         comp_args = compatible_tokens(param_tokens, param_tokenized)
         for ca in comp_args:
-            allowed.add(param_tokenized[ca][len(param_tokens)])
+            if param_tokens == param_tokenized[ca]:
+                allowed.add(quote_tok)
+            else:
+                allowed.add(param_tokenized[ca][len(param_tokens)])
+
+
+def allowed_next_value_tokens(model: Small_LLM_Model,
+                             tokens_generated: list,
+                             fn, allowed: set):
+    
+
+def allowed_next_args_tokens(model: Small_LLM_Model,
+                             tokens_generated: list,
+                             fn) -> set:
+    allowed = set()
+    allowed_next_keys_tokens(model,
+                             tokens_generated,
+                             fn, allowed)
     return allowed
 
 
