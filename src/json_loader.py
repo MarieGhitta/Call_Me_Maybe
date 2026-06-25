@@ -1,7 +1,8 @@
 import json
+from typing import Any
 
 
-def load_json(file: str) -> list[dict]:
+def load_json(file: str) -> Any:
     try:
         with open(file, "r") as json_file:
             json_content = json_file.read()

@@ -3,3 +3,4 @@
 https://docs.python.org/fr/3.14/library/json.html
 https://pydantic.dev/docs/validation/latest/api/pydantic/base_model/
 https://packaging.python.org/en/latest/guides/writing-pyproject-toml/
+https://docs.python.org/fr/3/howto/regex.html
