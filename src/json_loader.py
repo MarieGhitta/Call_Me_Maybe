@@ -17,6 +17,3 @@ def load_json(file: str) -> Any:
     except FileNotFoundError:
         raise ValueError("ERROR: File does not exist.")
     return json_data
-
-
-    

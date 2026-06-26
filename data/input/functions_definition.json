@@ -67,5 +67,17 @@
     "returns": {
       "type": "string"
     }
+  },
+  {
+  "name": "fn_toggle_light",
+  "description": "Turn a light on or off.",
+  "parameters": {
+    "enabled": {
+      "type": "boolean"
+    }
+  },
+  "returns": {
+    "type": "string"
   }
+}
 ]

@@ -31,5 +31,23 @@
   },
   {
     "prompt": "Substitute the word 'cat' with 'dog' in 'The cat sat on the mat with another cat'"
+  },
+  {
+    "prompt": "Turn the light on"
+  },
+  {
+    "prompt": "Turn the light off"
+  },
+  {
+    "prompt": "Enable the light"
+  },
+  {
+    "prompt": "Disable the light"
+  },
+  {
+    "prompt": "Please switch the light on"
+  },
+  {
+    "prompt": "Please switch the light off"
   }
 ]
