@@ -157,7 +157,7 @@ class Constrainator:
                 self.model.get_logits_from_input_ids(model_input))
             mask = np.zeros(len(logits), dtype=bool)
             mask[list(self.tokens.line_breaks)] = True
-            mask[self.tokens.commas] = True
+            # mask[self.tokens.commas] = True
             mask[self.tokens.close_bracket] = True
             logits[mask] = -inf
             best_token = int(np.argmax(logits))
@@ -226,6 +226,8 @@ class Constrainator:
         return generated_args
 
     def generate_function_call(self, user_prompt):
+        # if not user_prompt.strip():
+            # raise ValueError("ERROR: Empty prompt.")
         functions_description = ""
         for fn in self.loaded_functions:
             params = []
@@ -259,7 +261,7 @@ class Constrainator:
                 args = self._get_args(fn, out, context_tokens)
                 result = {
                     "prompt": user_prompt,
-                    "function": fn.name,
+                    "name": fn.name,
                     "parameters": args
                 }
                 return result

@@ -6,7 +6,7 @@ from .generator import Constrainator
 
 def main():
     try:
-        loaded_prompt = load_prompts("data/input/function_calling_tests.json")
+        loaded_prompt = load_prompts("data/input/normal_input.json")
         loaded_functions = load_functions("data/input/functions_definition.json")
         model = Small_LLM_Model()
         constrainator = Constrainator(model, loaded_functions)

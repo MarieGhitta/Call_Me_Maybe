@@ -1,0 +1,32 @@
+[
+  {
+    "prompt": "hello"
+  },
+  {
+    "prompt": "compute something"
+  },
+  {
+    "prompt": "do math"
+  },
+  {
+    "prompt": "change this string"
+  },
+  {
+    "prompt": ""
+  },
+  {
+    "prompt": " "
+  },
+  {
+    "prompt": "???"
+  },
+  {
+    "prompt": "What is the sum of banana and potato?"
+  },
+  {
+    "prompt": "Reverse"
+  },
+  {
+    "prompt": "Greet"
+  }
+]

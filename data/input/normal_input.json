@@ -1,0 +1,92 @@
+[
+  {
+    "prompt": "What is the sum of 2 and 3?"
+  },
+  {
+    "prompt": "What is the sum of -12.5 and 7.25?"
+  },
+  {
+    "prompt": "What is the sum of 0 and 0?"
+  },
+  {
+    "prompt": "What is the sum of 999999 and 1?"
+  },
+  {
+    "prompt": "What is the square root of 16?"
+  },
+  {
+    "prompt": "What is the square root of 1?"
+  },
+  {
+    "prompt": "What is the square root of 0?"
+  },
+  {
+    "prompt": "Calculate the square root of 99999"
+  },
+  {
+    "prompt": "Greet shrek"
+  },
+  {
+    "prompt": "Greet Marie"
+  },
+  {
+    "prompt": "Greet Jean-Luc"
+  },
+  {
+    "prompt": "Greet O'Brien"
+  },
+  {
+    "prompt": "Reverse the string 'hello'"
+  },
+  {
+    "prompt": "Reverse the string 'hello world'"
+  },
+  {
+    "prompt": "Reverse the string 'hello, world'"
+  },
+  {
+    "prompt": "Reverse the string 'a/b/c'"
+  },
+  {
+    "prompt": "Reverse the string 'hello \"chatgpt\"'"
+  },
+  {
+    "prompt": "Replace all numbers in \"Hello 34 I'm 233 years old\" with NUMBERS"
+  },
+  {
+    "prompt": "Replace all digits in 'abc123' with X"
+  },
+  {
+    "prompt": "Replace all vowels in 'Programming is fun' with asterisks"
+  },
+  {
+    "prompt": "Replace all spaces in 'hello world' with _"
+  },
+  {
+    "prompt": "Substitute the word 'cat' with 'dog' in 'The cat sat on the mat with another cat'"
+  },
+  {
+    "prompt": "Substitute the word 'dog' with 'cat' in 'dog dog dog'"
+  },
+  {
+    "prompt": "hello"
+  },
+  {
+    "prompt": "compute something"
+  },
+  {
+    "prompt": "do math"
+  },
+  {
+    "prompt": "change this string"
+  },
+  {
+    "prompt": ""
+  },
+  {
+    "prompt": " "
+  },
+  {
+    "prompt": "???"
+  }
+]
