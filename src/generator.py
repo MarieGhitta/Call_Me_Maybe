@@ -135,10 +135,7 @@ class Constrainator:
         if not out.buf:
             raise ValueError("Could not generate a valid number.")
         generated_number = self.model.decode(out.buf)
-        if "." in generated_number:
-            value = float(generated_number)
-        else:
-            value = int(generated_number)
+        value = float(generated_number)
         out.commit()
         return value
 
@@ -160,7 +157,6 @@ class Constrainator:
             # mask[self.tokens.commas] = True
             mask[self.tokens.close_bracket] = True
             logits[mask] = -inf
-            best_token = int(np.argmax(logits))
             best_token = int(np.argmax(logits))
             candidate = out.buf + [best_token]
             decoded = self.model.decode(candidate)
@@ -226,8 +222,6 @@ class Constrainator:
         return generated_args
 
     def generate_function_call(self, user_prompt):
-        # if not user_prompt.strip():
-            # raise ValueError("ERROR: Empty prompt.")
         functions_description = ""
         for fn in self.loaded_functions:
             params = []

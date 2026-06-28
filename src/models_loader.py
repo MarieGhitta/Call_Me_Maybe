@@ -6,8 +6,10 @@ def load_prompts(file: str) -> list[Prompt]:
     prompt_data = load_json(file)
     prompts = []
     for prompt in prompt_data:
-        data_obj = Prompt(**prompt)
-        prompts.append(data_obj)
+        try:
+            prompts.append(Prompt(**prompt))
+        except Exception:
+            print("Skipping empty prompt.")
     return prompts
 
 
