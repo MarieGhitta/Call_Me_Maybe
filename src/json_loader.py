@@ -1,21 +1,22 @@
+"""Utility functions for loading JSON files."""
+
 import json
 from typing import Any
 
 
 def load_json(file: str) -> Any:
-    """Loads json file.
+    """Load and parse a JSON file.
 
     Args:
-        file (str): path's file.
+        file (str): Path to the JSON file.
 
     Raises:
-        ValueError: no content in the file.
-        ValueError: invalid json data.
-        ValueError: empty file.
-        ValueError: file does not exist.
+        ValueError: If the file does not exist.
+        ValueError: If the file is empty.
+        ValueError: If the JSON content is invalid.
 
     Returns:
-        Any: _description_
+        Any: Parsed JSON content.
     """
     try:
         with open(file, "r") as json_file:

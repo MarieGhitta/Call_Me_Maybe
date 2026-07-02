@@ -1,15 +1,19 @@
+"""Functions for loading prompts and function definitions."""
+
 from .models import Prompt, FunctionDefinition
 from .json_loader import load_json
 
 
 def load_prompts(file: str) -> list[Prompt]:
-    """loading prompts in list format.
+    """Load prompts from a JSON file.
+
+    Invalid or empty prompts are skipped.
 
     Args:
-        file (str): path of the file.
+        file (str): Path to the prompts file.
 
     Returns:
-        list[Prompt]: liste with all the prompts.
+        list[Prompt]: Valid prompt objects.
     """
     prompt_data = load_json(file)
     prompts = []
@@ -22,13 +26,15 @@ def load_prompts(file: str) -> list[Prompt]:
 
 
 def load_functions(file: str) -> list[FunctionDefinition]:
-    """loading functions in list format.
+    """Load function definitions from a JSON file.
+
+    Invalid function definitions are skipped.
 
     Args:
-        file (str): path of the file.
+        file (str): Path to the function definitions file.
 
     Returns:
-        list[FunctionDefinition]: liste with all the functions.
+        list[FunctionDefinition]: Valid function definitions.
     """
     fn_def = load_json(file)
     functions = []

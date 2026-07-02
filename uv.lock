@@ -105,6 +105,9 @@ requires-dist = [
     { name = "transformers", specifier = ">=4.40.0" },
 ]
 
+[package.metadata.requires-dev]
+dev = []
+
 [[package]]
 name = "certifi"
 version = "2026.5.20"

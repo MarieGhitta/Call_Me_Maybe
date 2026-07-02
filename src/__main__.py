@@ -1,3 +1,6 @@
+"""Entry point for the Call Me Maybe project."""
+
+
 from .models_loader import load_prompts, load_functions
 import json
 from llm_sdk.llm_sdk import Small_LLM_Model
@@ -6,11 +9,12 @@ import argparse
 from pathlib import Path
 
 
-def parse_args() -> set:
-    """Parse input and output files.
+def parse_args() -> argparse.Namespace:
+    """Parse command-line arguments.
 
     Returns:
-        _type_: arguments.
+        argparse.Namespace: Parsed arguments containing paths for
+            function definitions, input prompts, and output file.
     """
     parser = argparse.ArgumentParser()
     parser.add_argument(
@@ -26,7 +30,14 @@ def parse_args() -> set:
 
 
 def main() -> None:
-    """Main function to run the programm.
+    """Run the function-calling pipeline.
+
+    Loads input files, initializes the LLM and constrained decoder,
+    generates function calls for each prompt, and writes the results
+    to the output JSON file.
+
+    Raises:
+        Exception: Prints any unexpected runtime error.
     """
     try:
         args = parse_args()

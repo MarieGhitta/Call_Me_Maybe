@@ -11,3 +11,6 @@ dependencies = [
     "flake8",
     "mypy",
 ]
+
+[dependency-groups]
+dev = []
