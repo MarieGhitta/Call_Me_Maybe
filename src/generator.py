@@ -7,18 +7,18 @@ class OutputJSON:
     """Check and create output.
     """
     def __init__(self) -> None:
-        self.put: list = []
-        self.buf: list = []
+        self.output_tokens: list[int] = []
+        self.buffer: list[int] = []
 
-    def append(self, data) -> None:
-        self.put.extend(data)
+    def append(self, data: list[int]) -> None:
+        self.output_tokens.extend(data)
 
     def add(self, data) -> None:
-        self.buf.extend(data)
+        self.buffer.extend(data)
 
     def commit(self) -> None:
-        self.put.extend(self.buf)
-        self.buf = []
+        self.output_tokens.extend(self.buffer)
+        self.buffer = []
 
 
 class Constrainator:
@@ -78,7 +78,8 @@ class Constrainator:
         prompt += "Selected function:"
         tokenised_prompt = self.model.encode(prompt).tolist()[0]
         while True:
-            entry_model = tokenised_prompt + out.put + generated_tokens
+            entry_model = (tokenised_prompt +
+                           out.output_tokens + generated_tokens)
             logits = np.array(
                 self.model.get_logits_from_input_ids(entry_model))
             allowed = self._allowed_next_tokens(generated_tokens)
@@ -120,7 +121,7 @@ class Constrainator:
 
     def _get_number(self, out, context_tokens, is_last):
         for _ in range(30):
-            model_input = context_tokens + out.put + out.buf
+            model_input = context_tokens + out.output_tokens + out.buffer
             logits = np.array(
                 self.model.get_logits_from_input_ids(model_input))
             mask = np.ones(len(logits), dtype=bool)
@@ -137,9 +138,9 @@ class Constrainator:
             out.add([best_token])
         else:
             raise ValueError("Number generation exceeded max tokens.")
-        if not out.buf:
+        if not out.buffer:
             raise ValueError("Could not generate a valid number.")
-        generated_number = self.model.decode(out.buf)
+        generated_number = self.model.decode(out.buffer)
         value = float(generated_number)
         out.commit()
         return value
@@ -155,7 +156,7 @@ class Constrainator:
 
     def _get_string(self, out, context_tokens, is_last):
         for _ in range(50):
-            model_input = context_tokens + out.put + out.buf
+            model_input = context_tokens + out.output_tokens + out.buffer
             logits = np.array(
                 self.model.get_logits_from_input_ids(model_input))
             mask = np.zeros(len(logits), dtype=bool)
@@ -163,24 +164,24 @@ class Constrainator:
             mask[self.tokens.close_bracket] = True
             logits[mask] = -inf
             best_token = int(np.argmax(logits))
-            candidate = out.buf + [best_token]
+            candidate = out.buffer + [best_token]
             decoded = self.model.decode(candidate)
-            if len(out.buf) > 0 and '"' in decoded:
+            if len(out.buffer) > 0 and '"' in decoded:
                 out.add([best_token])
                 break
             out.add([best_token])
         else:
             raise ValueError("String generation exceeded max tokens.")
-        if not out.buf:
+        if not out.buffer:
             raise ValueError("Could not generate a valid string.")
-        decoded = self.model.decode(out.buf)
+        decoded = self.model.decode(out.buffer)
         generated_string = decoded.split('"')[0]
         out.commit()
         return generated_string
 
     def _get_bool(self, out, context_tokens):
         generated_tokens = []
-        model_input = context_tokens + out.put + out.buf
+        model_input = context_tokens + out.output_tokens + out.buffer
         logits = np.array(
             self.model.get_logits_from_input_ids(model_input))
         allowed = {self.true_token, self.false_token}
@@ -189,7 +190,7 @@ class Constrainator:
             mask[token] = logits[token]
         best_token = int(np.argmax(mask))
         out.add([best_token])
-        generated_tokens = self.model.decode(out.buf)
+        generated_tokens = self.model.decode(out.buffer)
         out.commit()
         if "true" in generated_tokens:
             return True

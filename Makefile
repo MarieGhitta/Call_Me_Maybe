@@ -15,8 +15,8 @@ clean:
 	find . -type d -name ".mypy_cache" -exec rm -rf {} +
 
 lint:
-	uv run flake8 .
-	uv run mypy . \
+	uv run flake8 src
+	uv run mypy src \
 		--warn-return-any \
 		--warn-unused-ignores \
 		--ignore-missing-imports \
@@ -24,7 +24,7 @@ lint:
 		--check-untyped-defs
 
 lint-strict:
-	uv run flake8 .
-	uv run mypy . --strict
+	uv run flake8 src
+	uv run mypy src --strict
 
 .PHONY: install all run debug clean lint lint-strict
