@@ -1,6 +1,8 @@
+*This project has been created as part of the 42 curriculum by mghitta.*
+
 # Call Me Maybe
 
-## Introduction
+## Description
 
 **Call Me Maybe** is a Python project exploring **function calling with Large Language Models (LLMs)**.
 
@@ -36,7 +38,7 @@ It only generates the correct function call.
 
 ---
 
-# Objectives
+### Objectives
 
 This project focuses on understanding:
 
@@ -47,7 +49,47 @@ This project focuses on understanding:
 
 ---
 
-# Project Architecture
+# Instructions
+
+Requirements:
+
+- Python 3.10+
+- uv
+
+Install dependencies:
+
+```bash
+uv sync
+```
+
+Two input files:
+- Functions definitions
+- prompts
+
+---
+
+## Example Usage
+
+Default execution:
+
+```bash
+uv run python -m src
+```
+
+Custom paths:
+
+```bash
+uv run python -m src \
+    --functions_definition data/input/functions_definition.json \
+    --input data/input/function_calling_tests.json \
+    --output data/output/function_calling_results.json
+```
+
+This matches the execution format required by the subject.
+
+---
+
+# Design decisions
 
 The project is organized into several modules.
 
@@ -173,12 +215,6 @@ The output directory is automatically created if missing.
 
 ---
 
-# Input Files
-
-Two input files are required.
-
----
-
 ## `functions_definition.json`
 
 Contains all callable functions.
@@ -238,7 +274,7 @@ Without constraints, output reliability is low.
 
 ---
 
-## Principle
+## Algorithm explanation
 
 Instead of allowing the model to generate any token, the decoder restricts generation to valid tokens only.
 
@@ -253,7 +289,7 @@ Invalid tokens become impossible to generate.
 
 ---
 
-# Function Selection
+### Function Selection
 
 Function selection is performed using the LLM.
 
@@ -298,7 +334,7 @@ This guarantees the final function name belongs to the allowed list.
 
 ---
 
-# Argument Generation
+### Argument Generation
 
 After function selection, arguments are generated according to parameter types.
 
@@ -310,7 +346,7 @@ Supported types:
 
 ---
 
-## Number Generation
+#### Number Generation
 
 Allowed tokens include:
 
@@ -325,11 +361,9 @@ Example:
 "a": 42.0
 ```
 
-Numbers are converted to floats to match moulinette expectations.
-
 ---
 
-## String Generation
+#### String Generation
 
 String generation stops when a closing quote is produced.
 
@@ -346,7 +380,7 @@ Example:
 
 ---
 
-## Boolean Generation
+#### Boolean Generation
 
 Only two tokens are allowed:
 
@@ -361,7 +395,7 @@ Example:
 
 ---
 
-# Regex Handling
+#### Regex Handling
 
 Some functions accept regex parameters.
 
@@ -387,7 +421,7 @@ This improves compatibility with expected test outputs.
 
 ---
 
-# Output Format
+### Output Format
 
 Results are written as JSON in:
 
@@ -412,7 +446,7 @@ Output always respects the expected schema.
 
 ---
 
-# Error Handling
+### Error Handling
 
 The program handles:
 
@@ -428,102 +462,23 @@ The program should never crash unexpectedly.
 
 ---
 
-# Installation
+# Performance analysis
 
-Requirements:
+I discussed with my peers to find good solution to have better speed. First of all, the use of numpy improves a lot the efficency.  
+Another big problem with speed, was to run the programm on the school computer.  
+I get a very good solution from a peer, which was to get the dependency installed in the sgoinfre folder, which has plenty of space.  
 
-- Python 3.10+
-- uv
-
-Install dependencies:
-
-```bash
-uv sync
-```
-
----
-
-# Usage
-
-Default execution:
-
-```bash
-uv run python -m src
-```
-
-Custom paths:
-
-```bash
-uv run python -m src \
-    --functions_definition data/input/functions_definition.json \
-    --input data/input/function_calling_tests.json \
-    --output data/output/function_calling_results.json
-```
-
-This matches the execution format required by the subject.
-
----
-
-# Technical Choices
-
-## Why Pydantic?
-
-Pydantic provides:
-
-- strict validation
-- clearer errors
-- cleaner data models
-
-This simplifies input validation.
-
----
-
-## Why Constrained Decoding?
-
-Prompting alone is unreliable.
-
-Constrained decoding guarantees:
-
-- valid syntax
-- correct structure
-- controlled token generation
-
-This dramatically improves reliability.
-
----
-
-# Limitations
-
-Current limitations:
-
-- no nested objects
-- no arrays
-- no enums
-- limited semantic understanding of ambiguous prompts
-
-The quality of outputs still depends on the underlying model.
-
----
-
-# Possible Improvements
-
-Future improvements could include:
-
-- nested JSON schemas
-- array support
-- beam search
-- better semantic prompt understanding
-- richer schema validation
-
----
-
-# Challenges Encountered
+# Challenges faced
 
 Main difficulties during development:
 
 ## Function selection
 
 Ensuring the model selects functions using the LLM rather than heuristics required token-level constraints.
+
+## Aguments selection
+
+I add such difficulties to obtain the arguments. I had to do it in a totally different way of the function selection. I had to undertand how to use a mask and numpy. After this I used what I learned to improve the function selection.
 
 ## String generation
 
@@ -541,31 +496,30 @@ Regex prompts introduced escaping problems, especially backslashes.
 
 ---
 
-# What I Learned
+# Testing strategy
 
-This project helped me understand:
-
-- tokenization
-- logits and probability distributions
-- constrained decoding
-- LLM reliability limitations
-- practical function calling systems
-
-It provided a concrete understanding of how modern AI assistants connect language understanding with executable systems.
+I use the tests provided as soon as I can. When this tests worked, I add more complex situation to improve my  programm. 
 
 ---
 
-# Resources
-
-- Qwen/Qwen3-0.6B
-- NumPy
-- Pydantic
-- Python JSON library
-- Karpathy — Deep Dive into LLMs
-
 # Ressouces:
-[Deep Dive into LLMs like ChatGPT - Andrej Karpathy](https://www.youtube.com/watch?v=7xTGNNLPyMI)
-https://docs.python.org/fr/3.14/library/json.html
-https://pydantic.dev/docs/validation/latest/api/pydantic/base_model/
-https://packaging.python.org/en/latest/guides/writing-pyproject-toml/
-https://docs.python.org/fr/3/howto/regex.html
+
+## Documentation:
+
+### LLM:
+    [Deep Dive into LLMs like ChatGPT - Andrej Karpathy](https://www.youtube.com/watch?v=7xTGNNLPyMI)
+### Json: 
+    https://docs.python.org/fr/3.14/library/json.html
+### Pydantic:
+    https://pydantic.dev/docs/validation/latest/api/pydantic/base_model/
+### Packaging:
+    https://packaging.python.org/en/latest/guides/writing-pyproject-toml/
+### Regex:
+    https://docs.python.org/fr/3/howto/regex.html
+### Numpy:
+    https://numpy.org/doc/stable/user/numpy-for-matlab-users.html
+
+## AI Usage:
+    - explaining the different concepts of LLM.
+    - creating tests.
+    - README structure.

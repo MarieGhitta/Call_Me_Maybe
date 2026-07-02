@@ -1,27 +1,30 @@
 import numpy as np
 from math import inf
 from .json_loader import load_json
-import json
 
 
 class OutputJSON:
-    def __init__(self):
-        self.put = []
-        self.buf = []
+    """Check and create output.
+    """
+    def __init__(self) -> None:
+        self.put: list = []
+        self.buf: list = []
 
-    def append(self, data):
+    def append(self, data) -> None:
         self.put.extend(data)
 
-    def add(self, data):
+    def add(self, data) -> None:
         self.buf.extend(data)
 
-    def commit(self):
+    def commit(self) -> None:
         self.put.extend(self.buf)
         self.buf = []
 
 
 class Constrainator:
-    def __init__(self, model, loaded_functions):
+    """Constrain the LLM.
+    """
+    def __init__(self, model, loaded_functions) -> None:
         self.model = model
         self.loaded_functions = loaded_functions
         self.tokenized_functions = self._function_tokenisation()
@@ -93,6 +96,8 @@ class Constrainator:
         return comp_fn[0]
 
     class TokensCollection:
+        """Tokenize elements needed.
+        """
         def __init__(self, vocab):
             self.vocab = vocab
             self.len = len(vocab)

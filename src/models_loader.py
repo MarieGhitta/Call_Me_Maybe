@@ -3,6 +3,14 @@ from .json_loader import load_json
 
 
 def load_prompts(file: str) -> list[Prompt]:
+    """loading prompts in list format.
+
+    Args:
+        file (str): path of the file.
+
+    Returns:
+        list[Prompt]: liste with all the prompts.
+    """
     prompt_data = load_json(file)
     prompts = []
     for prompt in prompt_data:
@@ -14,9 +22,20 @@ def load_prompts(file: str) -> list[Prompt]:
 
 
 def load_functions(file: str) -> list[FunctionDefinition]:
+    """loading functions in list format.
+
+    Args:
+        file (str): path of the file.
+
+    Returns:
+        list[FunctionDefinition]: liste with all the functions.
+    """
     fn_def = load_json(file)
     functions = []
     for fn in fn_def:
-        fn_obj = FunctionDefinition(**fn)
-        functions.append(fn_obj)
+        try:
+            fn_obj = FunctionDefinition(**fn)
+            functions.append(fn_obj)
+        except Exception:
+            print("Incorrect format function.")
     return functions

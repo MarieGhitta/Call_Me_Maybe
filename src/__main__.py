@@ -6,7 +6,12 @@ import argparse
 from pathlib import Path
 
 
-def parse_args():
+def parse_args() -> set:
+    """Parse input and output files.
+
+    Returns:
+        _type_: arguments.
+    """
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "--functions_definition",
@@ -20,7 +25,9 @@ def parse_args():
     return parser.parse_args()
 
 
-def main():
+def main() -> None:
+    """Main function to run the programm.
+    """
     try:
         args = parse_args()
         output_path = Path(args.output)
