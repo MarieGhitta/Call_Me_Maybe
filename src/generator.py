@@ -1,6 +1,7 @@
 import numpy as np
 from math import inf
 from .json_loader import load_json
+import json
 
 
 class OutputJSON:
@@ -30,7 +31,6 @@ class Constrainator:
         self.tokens = self.TokensCollection(self.vocab)
         self.true_token = self.model.encode("true").tolist()[0][0]
         self.false_token = self.model.encode("false").tolist()[0][0]
-    
 
     def _function_tokenisation(self) -> dict:
         tokenized_fn = {}
@@ -140,6 +140,7 @@ class Constrainator:
         return value
 
     def _normalize_regex(self, regex):
+        regex = regex.replace("\\\\", "\\")
         if regex.startswith("/") and regex.count("/") >= 2:
             last_slash = regex.rfind("/")
             flags = regex[last_slash + 1:]
@@ -154,7 +155,6 @@ class Constrainator:
                 self.model.get_logits_from_input_ids(model_input))
             mask = np.zeros(len(logits), dtype=bool)
             mask[list(self.tokens.line_breaks)] = True
-            # mask[self.tokens.commas] = True
             mask[self.tokens.close_bracket] = True
             logits[mask] = -inf
             best_token = int(np.argmax(logits))
@@ -172,7 +172,7 @@ class Constrainator:
         generated_string = decoded.split('"')[0]
         out.commit()
         return generated_string
-    
+
     def _get_bool(self, out, context_tokens):
         generated_tokens = []
         model_input = context_tokens + out.put + out.buf
